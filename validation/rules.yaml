@@ -1,0 +1,51 @@
+# ============================================================
+# rules.yaml — NexaMart validation rule descriptors (documentation only)
+# ============================================================
+# CE FICHIER N'EST PAS UN VALIDATEUR. Le runtime lancé par
+# `make check` / `.\run.ps1 check` est exclusivement
+# `validation/checks.sql` (orchestré par `src/run_checks.py`).
+#
+# Rôle de rules.yaml :
+#   - Documenter, en YAML lisible, quelles règles sont attendues à
+#     quelle séance (colonne `session`). Utile pour les outils
+#     instructeurs (génération de rapport, audit) et pour la rédaction
+#     de la rubric.
+#   - Servir de référence croisée : toute règle listée ici DOIT avoir
+#     une contrepartie dans checks.sql, et vice-versa.
+#
+# Si vous ajoutez une règle ici, ajoutez la requête correspondante dans
+# `validation/checks.sql` (sinon elle n'est pas vérifiée).
+# Si vous ajoutez un check dans checks.sql, ajoutez son descripteur ici
+# (sinon il disparaît de la documentation / audit).
+# ============================================================
+
+rules:
+  - name: fact_sales_not_empty
+    table: fact_sales
+    check: row_count > 0
+    session: S02
+
+  - name: dim_keys_unique
+    tables: [dim_date, dim_product, dim_store, dim_customer, dim_channel]
+    check: primary_key_unique
+    session: S02
+
+  - name: fact_sales_no_null_fk
+    table: fact_sales
+    check: no_null_foreign_keys
+    columns: [order_date, product_id, store_id, customer_id, channel_id]
+    session: S02
+
+  - name: bridge_weights_sum_to_one
+    table: bridge_customer_segment
+    check: sum_by_group_equals
+    group_by: customer_id
+    column: weight
+    expected: 1.0
+    tolerance: 0.001
+    session: S08
+
+  - name: dataset_identity
+    file: meta/dataset_identity.json
+    check: fingerprint_matches_seed
+    session: S01

@@ -1,0 +1,28 @@
+{
+  "name": "GIS805 - NexaMart",
+  "image": "mcr.microsoft.com/devcontainers/python:3.12",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {}
+  },
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "Evidence.sqltools-duckdb-driver",
+        "mtxr.sqltools",
+        "bierner.markdown-mermaid",
+        "GitHub.copilot",
+        "GitHub.copilot-chat"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "editor.formatOnSave": true,
+        "files.trimTrailingWhitespace": true
+      }
+    }
+  },
+  "forwardPorts": [],
+  "remoteUser": "vscode"
+}
