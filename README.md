@@ -5,9 +5,8 @@ Vous venez d'accepter votre premier assignment. Ce dépôt est **votre espace de
 
 > **Lien d'acceptation du devoir :** [https://classroom.github.com/a/1e7AQPN7](https://classroom.github.com/a/1e7AQPN7)
 
-> **Le scénario :** Vous êtes le Head of Data de NexaMart, une chaîne de
-> commerce de détail. Chaque semaine, le CEO pose une question stratégique
-> — et les systèmes opérationnels ne peuvent pas y répondre. Votre job :
+> **Le scénario :** Vous êtes le Head of Data de NexaMart, une chaîne de commerce de détail. Chaque semaine, le CEO pose une question stratégique et les systèmes opérationnels ne peuvent pas y répondre.
+Votre job :
 > construire l'entrepôt de données qui rend ces réponses possibles.
 
 Pas besoin d'être programmeur. Vous travaillez en **langage naturel d'abord** :

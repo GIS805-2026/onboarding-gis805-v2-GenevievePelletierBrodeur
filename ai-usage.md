@@ -16,11 +16,21 @@
 
 ---
 
-### 2026-01-XX — Séance S00 *(exemple — supprimez cette entrée quand vous ajoutez les vôtres)*
-- **Modèle :** GitHub Copilot Chat
-- **Prompt :** « Qu'est-ce qui se trouve dans mon dépôt ? Explique-moi la structure du projet. »
-- **Résultat :** Copilot a listé les dossiers principaux (sql/, answers/, data/, docs/) et expliqué le rôle de chacun dans le contexte d'un entrepôt dimensionnel.
-- **Validation :** J'ai comparé la réponse avec le README.md et le contenu réel des dossiers — tout correspondait.
-- **Justification :** Première prise de contact avec le dépôt ; je voulais comprendre l'organisation avant de lancer les commandes.
-
 <!-- Ajoutez vos entrées ci-dessous -->
+### 2026-05-10 — Séance S01
+- **Modèle :** GitHub Copilot Chat
+- **Prompt :** « Aide-moi à compléter les sections Preuve, Validation, Risques / limites et Prochaines recommandations de mon Board Brief S01. Je veux expliquer pourquoi la base actuelle n’est pas suffisamment propre pour faire une analyse fiable en OLTP et pourquoi un entrepôt OLAP complet est nécessaire. »
+- **Résultat :** Rédaction des 4 sections avec une logique claire : requête SQL pertinente, limites de l’OLTP, risques de biais temporel et recommandations pour un entrepôt dimensionnel historique.
+- **Validation :** J’ai vérifié que le texte respecte le style du brief, qu’il mentionne le grain, l’OLTP vs OLAP et qu’il reste argumenté sans chiffres inventés.
+- **Justification :** Cette interaction était nécessaire pour formuler une réponse structurée et professionnelle au CEO, en expliquant pourquoi on ne peut pas simplement exécuter une requête ad hoc sur un système transactionnel.
+
+### 2026-05-10 — Séance S01
+- **Modèle :** GitHub Copilot Chat
+- **Prompt :** « Explique-moi la différence entre Commit, Commit & Push, Commit & Sync, Commit (Amend) dans VS Code et indique comment envoyer mon travail au prof. »
+- **Résultat :** Explication claire de chaque option Git dans VS Code et recommandation d’utiliser `Commit & Push` pour envoyer les changements au professeur.
+- **Validation :** J’ai comparé la réponse avec l’interface de VS Code et les options affichées dans le panneau Source Control.
+- **Justification :** Je devais savoir précisément comment livrer mon travail GitHub de manière correcte et vérifiable pour la remise du brief.
+
+---
+
+### YYYY-MM-DD — Séance S02
