@@ -51,6 +51,7 @@ ORDER BY delta ASC;
 ```
 
 
+
 Cependant, exécuter cette requête aujourd'hui sur les tables source (OLTP) serait techniquement possible mais conceptuellement fragile : les dimensions source (product, store, date) ne sont pas historisées — elles reflètent l'état actuel, pas celui au moment de chaque vente. Comparer une vente de 2024 en utilisant la description d'aujourd'hui du produit / magasin introduit un biais silencieux. De plus, les années 2024–2025 peuvent ne pas être présentes en volume comparable dans une base transactionnelle jeune, ce qui invalide la comparaison.
 
 ## Validation
