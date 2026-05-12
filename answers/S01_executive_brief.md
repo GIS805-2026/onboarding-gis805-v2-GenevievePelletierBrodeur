@@ -50,9 +50,54 @@ HAVING SUM(CASE WHEN d.year = 2024 THEN f.line_total END) >= 5000
 ORDER BY delta ASC;
 ```
 
-
-
 Cependant, exécuter cette requête aujourd'hui sur les tables source (OLTP) serait techniquement possible mais conceptuellement fragile : les dimensions source (product, store, date) ne sont pas historisées — elles reflètent l'état actuel, pas celui au moment de chaque vente. Comparer une vente de 2024 en utilisant la description d'aujourd'hui du produit / magasin introduit un biais silencieux. De plus, les années 2024–2025 peuvent ne pas être présentes en volume comparable dans une base transactionnelle jeune, ce qui invalide la comparaison.
+
+Résultat exécuté sur la source : 0 ligne.
+
+category	region	rev_2024	rev_2025	delta
+(aucune ligne)
+Ce résultat n'est pas une erreur de la requête — c'est le constat empirique que la base source ne contient que des ventes 2025 (MIN(order_date) = 2025-01-01, MAX(order_date) = 2025-12-31, 3 850 lignes). La comparaison YoY demandée par le CEO n'est pas calculable sur l'état actuel des données. C'est précisément le risque anticipé dans les sections Validation (point 2) et Risques (point 2) ci-dessous.
+
+Meilleure approximation disponible — proxy QoQ intra-2025. Pour donner au CEO une lecture provisoire, j'ai changé le grain temporel : comparer Q1 2025 vs Q4 2025 au sein de la même année. Cette substitution est explicitement un proxy — elle expose une tendance trimestrielle, pas un déclin annuel.
+
+```
+WITH q AS (
+  SELECT p.category, s.region, d.quarter,
+         SUM(f.line_total) AS rev
+  FROM raw_fact_sales f
+  JOIN raw_dim_product p ON f.product_id = p.product_id
+  JOIN raw_dim_store   s ON f.store_id   = s.store_id
+  JOIN raw_dim_date    d ON f.order_date = d.date_key
+  WHERE d.year = 2025
+  GROUP BY p.category, s.region, d.quarter
+)
+SELECT category, region,
+       SUM(CASE WHEN quarter=1 THEN rev END) AS q1,
+       SUM(CASE WHEN quarter=4 THEN rev END) AS q4,
+       SUM(CASE WHEN quarter=4 THEN rev END)
+         - SUM(CASE WHEN quarter=1 THEN rev END) AS delta
+FROM q
+GROUP BY category, region
+HAVING SUM(CASE WHEN quarter=1 THEN rev END) >= 5000
+   AND SUM(CASE WHEN quarter=4 THEN rev END)
+     - SUM(CASE WHEN quarter=1 THEN rev END) < 0
+ORDER BY delta ASC;
+```
+Résultat (8 paires catégorie × région en déclin Q1 → Q4 2025) :
+
+category	region	Q1 2025	Q4 2025	delta
+Pet Supplies	Québec	7 909	4 936	−2 973
+Books & Media	Alberta	7 697	4 923	−2 774
+Automotive	BC	5 465	3 051	−2 414
+Grocery	Ontario	6 785	4 405	−2 380
+Toys & Games	Estrie	6 418	4 177	−2 242
+Books & Media	Ontario	20 328	18 459	−1 869
+Sports & Outdoors	Ontario	5 038	3 524	−1 514
+Pet Supplies	Alberta	5 612	4 427	−1 185
+
+Lecture : Pet Supplies au Québec et Books & Media en Alberta affichent les plus fortes baisses absolues entre Q1 et Q4 2025. Une seconde lecture est nécessaire en relatif (% de baisse) pour distinguer le bruit d'échantillonnage d'un vrai signal métier — non couvert ici.
+
+Limite assumée : ce proxy QoQ ne répond pas à la question du CEO telle que posée (« décliner » sous-entend une comparaison annuelle). Il offre une lecture exploratoire à confirmer une fois l'entrepôt OLAP historisé en place (voir Recommandations).
 
 ## Validation
 
