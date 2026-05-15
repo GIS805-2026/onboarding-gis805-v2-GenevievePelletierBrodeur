@@ -39,7 +39,7 @@ capture les choix structurants, l'alternative écartée, et le raisonnement.
 
 ### D01 — Grain de `fact_sales` = une ligne de commande
 
-- **Date / séance :** <!-- TODO (S02) -->
+- **Date / séance :** 2026-05-15 (S02)
 - **Contexte :** La question CEO du S02 demande des ventes par
   catégorie et région. Granularité de commande (en-tête) masque la
   catégorie ; granularité d'événement de paiement éclate inutilement.
@@ -47,11 +47,13 @@ capture les choix structurants, l'alternative écartée, et le raisonnement.
 - **Alternatives écartées :**
   - Grain en-tête de commande : perdrait la catégorie produit.
   - Grain événement paiement : sur-fragmenté pour nos questions.
-- **Conséquences :** `sale_line_id` est degenerate dim dans `fact_sales`.
-  Toute question "par commande" agrège, pas l'inverse.
+- **Conséquences :** `sale_line_id` identifie la ligne de vente et
+  `order_number` reste une dimension dégénérée dans `fact_sales`. Toute
+  question "par commande" agrège, pas l'inverse.
 - **Révisable si :** Apparition de questions sur paiement multiple
   (split payment) qui exigeraient le grain événement.
-- **Références :** `sql/facts/fact_sales.sql`, `docs/worked-examples/s02-star-schema-walkthrough.md`.
+- **Références :** `sql/facts/fact_sales.sql`,
+  `sql/analysis/s02-first-answer.sql`, `docs/schema-v1.md`.
 
 ### D02 — `dim_customer` en SCD Type 2
 
